@@ -1,0 +1,12 @@
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\bin\Debug\net8.0\EmployeeManagement.Core.deps.json
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\bin\Debug\net8.0\EmployeeManagement.Core.dll
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\bin\Debug\net8.0\EmployeeManagement.Core.pdb
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\EmployeeManagement.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\EmployeeManagement.Core.AssemblyInfoInputs.cache
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\EmployeeManagement.Core.AssemblyInfo.cs
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\EmployeeManagement.Core.csproj.CoreCompileInputs.cache
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\EmployeeManagement.Core.sourcelink.json
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\EmployeeManagement.Core.dll
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\refint\EmployeeManagement.Core.dll
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\EmployeeManagement.Core.pdb
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Core\obj\Debug\net8.0\ref\EmployeeManagement.Core.dll

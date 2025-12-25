@@ -14,12 +14,12 @@ public class EmployeeRepository : IEmployeeRepository
     _context = context;
   }
 
-  public async Task<IEnumerable<Employee>> GetAllEmployees()
+  public async Task<IEnumerable<Employee>> GetAllAsync()  // Sửa tên method
   {
     return await _context.Employees.ToListAsync();
   }
 
-  public async Task<Employee> GetByIDAsync(int id)
+  public async Task<Employee?> GetByIdAsync(int id)  // Sửa tên và thêm ?
   {
     return await _context.Employees.FindAsync(id);
   }
@@ -34,14 +34,24 @@ public class EmployeeRepository : IEmployeeRepository
 
   public async Task<Employee> UpdateAsync(Employee employee)
   {
-    var employee = _context.Employees.GetByIDAsync(employee.Id);
+    var existingEmployee = await _context.Employees.FindAsync(employee.Id);  // Sửa logic
 
-    if(employee == null) throw new NotFoundException("Employee not found");
+    if(existingEmployee == null) 
+      throw new InvalidOperationException("Employee not found");  // Sửa exception
 
-    employee.UpdatedAt = DateTime.UtcNow;
-    _context.Employees.Update(employee);
+    existingEmployee.FirstName = employee.FirstName;
+    existingEmployee.LastName = employee.LastName;
+    existingEmployee.Email = employee.Email;
+    existingEmployee.PhoneNumber = employee.PhoneNumber;
+    existingEmployee.Department = employee.Department;
+    existingEmployee.Position = employee.Position;
+    existingEmployee.Salary = employee.Salary;
+    existingEmployee.HireDate = employee.HireDate;
+    existingEmployee.UpdatedAt = DateTime.UtcNow;
+    
+    _context.Employees.Update(existingEmployee);
     await _context.SaveChangesAsync();
-    return employee;
+    return existingEmployee;  // Trả về existingEmployee
   }
 
   public async Task<bool> DeleteAsync(int id)
@@ -57,6 +67,6 @@ public class EmployeeRepository : IEmployeeRepository
 
   public async Task<bool> ExistsAsync(int id)
   {
-    return await _context.Employees.AddAsync(e => e.Id == id);
+    return await _context.Employees.AnyAsync(e => e.Id == id);  // Sửa từ AddAsync thành AnyAsync
   }
 }
