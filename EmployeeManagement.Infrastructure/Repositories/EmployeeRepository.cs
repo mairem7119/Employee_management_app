@@ -14,30 +14,52 @@ public class EmployeeRepository : IEmployeeRepository
     _context = context;
   }
 
-  public async Task<IEnumerable<Employee>> GetAllAsync()  // Sửa tên method
+  public async Task<IEnumerable<Employee>> GetAllAsync()
   {
     return await _context.Employees.ToListAsync();
   }
 
-  public async Task<Employee?> GetByIdAsync(int id)  // Sửa tên và thêm ?
+  public async Task<Employee?> GetByIdAsync(int id)
   {
     return await _context.Employees.FindAsync(id);
   }
 
   public async Task<Employee> AddAsync(Employee employee)
   {
-    employee.CreatedAt = DateTime.UtcNow;
-    _context.Employees.Add(employee);
-    await _context.SaveChangesAsync();
-    return employee;
+    try
+    {
+      // Convert HireDate sang UTC nếu chưa phải UTC
+      if (employee.HireDate.Kind != DateTimeKind.Utc)
+      {
+        employee.HireDate = DateTime.SpecifyKind(employee.HireDate.Date, DateTimeKind.Utc);
+      }
+      
+      // Đảm bảo CreatedAt được set và là UTC
+      employee.CreatedAt = DateTime.UtcNow;
+      
+      _context.Employees.Add(employee);
+      await _context.SaveChangesAsync();
+      return employee;
+    }
+    catch (DbUpdateException ex)
+    {
+      var innerException = ex.InnerException;
+      if (innerException != null)
+      {
+        throw new InvalidOperationException(
+          $"Database error: {innerException.Message}. " +
+          $"Original error: {ex.Message}", ex);
+      }
+      throw;
+    }
   }
 
   public async Task<Employee> UpdateAsync(Employee employee)
   {
-    var existingEmployee = await _context.Employees.FindAsync(employee.Id);  // Sửa logic
+    var existingEmployee = await _context.Employees.FindAsync(employee.Id);
 
     if(existingEmployee == null) 
-      throw new InvalidOperationException("Employee not found");  // Sửa exception
+      throw new InvalidOperationException("Employee not found");
 
     existingEmployee.FirstName = employee.FirstName;
     existingEmployee.LastName = employee.LastName;
@@ -46,12 +68,36 @@ public class EmployeeRepository : IEmployeeRepository
     existingEmployee.Department = employee.Department;
     existingEmployee.Position = employee.Position;
     existingEmployee.Salary = employee.Salary;
-    existingEmployee.HireDate = employee.HireDate;
+    
+    // Convert HireDate sang UTC
+    if (employee.HireDate.Kind != DateTimeKind.Utc)
+    {
+      existingEmployee.HireDate = DateTime.SpecifyKind(employee.HireDate.Date, DateTimeKind.Utc);
+    }
+    else
+    {
+      existingEmployee.HireDate = employee.HireDate;
+    }
+    
     existingEmployee.UpdatedAt = DateTime.UtcNow;
     
-    _context.Employees.Update(existingEmployee);
-    await _context.SaveChangesAsync();
-    return existingEmployee;  // Trả về existingEmployee
+    try
+    {
+      _context.Employees.Update(existingEmployee);
+      await _context.SaveChangesAsync();
+      return existingEmployee;
+    }
+    catch (DbUpdateException ex)
+    {
+      var innerException = ex.InnerException;
+      if (innerException != null)
+      {
+        throw new InvalidOperationException(
+          $"Database error: {innerException.Message}. " +
+          $"Original error: {ex.Message}", ex);
+      }
+      throw;
+    }
   }
 
   public async Task<bool> DeleteAsync(int id)
@@ -67,6 +113,6 @@ public class EmployeeRepository : IEmployeeRepository
 
   public async Task<bool> ExistsAsync(int id)
   {
-    return await _context.Employees.AnyAsync(e => e.Id == id);  // Sửa từ AddAsync thành AnyAsync
+    return await _context.Employees.AnyAsync(e => e.Id == id);
   }
 }

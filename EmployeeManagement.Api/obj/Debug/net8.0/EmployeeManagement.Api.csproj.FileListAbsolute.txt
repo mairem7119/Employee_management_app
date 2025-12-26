@@ -141,3 +141,5 @@ C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Api\obj\Deb
 C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Api\obj\Debug\net8.0\EmployeeManagement.Api.genruntimeconfig.cache
 C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Api\obj\Debug\net8.0\ref\EmployeeManagement.Api.dll
 C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Api\bin\Debug\net8.0\Npgsql.dll
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Api\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

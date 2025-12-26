@@ -37,18 +37,18 @@
         <dd class="col-sm-9">@Model.Salary.ToString("N0") VNĐ</dd>
 
         <dt class="col-sm-3">Ngày vào làm:</dt>
-        <dd class="col-sm-9">@Model.HireDate.ToString("dd/MM/yyyy")</dd>
+        <dd class="col-sm-9">@Model.HireDate.ToLocalTime().ToString("dd/MM/yyyy")</dd>
 
         @if (Model.CreatedAt.HasValue)
         {
             <dt class="col-sm-3">Ngày tạo:</dt>
-            <dd class="col-sm-9">@Model.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm")</dd>
+            <dd class="col-sm-9">@Model.CreatedAt.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
         }
 
         @if (Model.UpdatedAt.HasValue)
         {
             <dt class="col-sm-3">Ngày cập nhật:</dt>
-            <dd class="col-sm-9">@Model.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")</dd>
+            <dd class="col-sm-9">@Model.UpdatedAt.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
         }
     </dl>
 

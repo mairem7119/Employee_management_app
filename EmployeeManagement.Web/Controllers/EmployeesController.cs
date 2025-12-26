@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using EmployeeManagement.Core.Entities;
 using EmployeeManagement.Core.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Web.Controllers;
 
@@ -37,11 +38,64 @@ public class EmployeesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Employee employee)
     {
-        if (ModelState.IsValid)
+        try
         {
-            await _employeeService.CreateEmployeeAsync(employee);
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                // Convert HireDate sang UTC nếu cần
+                if (employee.HireDate.Kind != DateTimeKind.Utc)
+                {
+                    employee.HireDate = DateTime.SpecifyKind(employee.HireDate.Date, DateTimeKind.Utc);
+                }
+                
+                await _employeeService.CreateEmployeeAsync(employee);
+                TempData["SuccessMessage"] = "Nhân viên đã được thêm thành công!";
+                return RedirectToAction(nameof(Index));
+            }
         }
+        catch (DbUpdateException ex)
+        {
+            var innerEx = ex.InnerException;
+            var errorMessage = innerEx?.Message ?? ex.Message;
+            
+            if (errorMessage.Contains("IX_Employees_Email") || 
+                errorMessage.Contains("duplicate key value") ||
+                errorMessage.Contains("unique constraint"))
+            {
+                ModelState.AddModelError("Email", "Email này đã tồn tại. Vui lòng sử dụng email khác.");
+            }
+            else if (errorMessage.Contains("timestamp with time zone") || 
+                    errorMessage.Contains("DateTime with Kind"))
+            {
+                ModelState.AddModelError("HireDate", "Lỗi xử lý ngày tháng. Vui lòng thử lại.");
+            }
+            else if (errorMessage.Contains("not null") || 
+                    errorMessage.Contains("null value"))
+            {
+                ModelState.AddModelError("", "Vui lòng điền đầy đủ thông tin bắt buộc.");
+            }
+            else
+            {
+                ModelState.AddModelError("", $"Lỗi database: {errorMessage}");
+            }
+            
+            Console.WriteLine($"DbUpdateException: {ex.Message}");
+            if (innerEx != null)
+            {
+                Console.WriteLine($"Inner Exception: {innerEx.Message}");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("", $"Lỗi: {ex.Message}");
+            Console.WriteLine($"InvalidOperationException: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", $"Lỗi không xác định: {ex.Message}");
+            Console.WriteLine($"Exception: {ex.Message}");
+        }
+
         return View(employee);
     }
 
@@ -61,14 +115,49 @@ public class EmployeesController : Controller
         if (id != employee.Id)
             return NotFound();
 
-        if (ModelState.IsValid)
+        try
         {
-            var result = await _employeeService.UpdateEmployeeAsync(id, employee);
-            if (result == null)
-                return NotFound();
+            if (ModelState.IsValid)
+            {
+                // Convert HireDate sang UTC nếu cần
+                if (employee.HireDate.Kind != DateTimeKind.Utc)
+                {
+                    employee.HireDate = DateTime.SpecifyKind(employee.HireDate.Date, DateTimeKind.Utc);
+                }
+                
+                var result = await _employeeService.UpdateEmployeeAsync(id, employee);
+                if (result == null)
+                    return NotFound();
 
-            return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Thông tin nhân viên đã được cập nhật!";
+                return RedirectToAction(nameof(Index));
+            }
         }
+        catch (DbUpdateException ex)
+        {
+            var innerEx = ex.InnerException;
+            var errorMessage = innerEx?.Message ?? ex.Message;
+            
+            if (errorMessage.Contains("IX_Employees_Email") || 
+                errorMessage.Contains("duplicate key value"))
+            {
+                ModelState.AddModelError("Email", "Email này đã tồn tại. Vui lòng sử dụng email khác.");
+            }
+            else if (errorMessage.Contains("timestamp with time zone") || 
+                    errorMessage.Contains("DateTime with Kind"))
+            {
+                ModelState.AddModelError("HireDate", "Lỗi xử lý ngày tháng. Vui lòng thử lại.");
+            }
+            else
+            {
+                ModelState.AddModelError("", $"Lỗi database: {errorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", $"Lỗi: {ex.Message}");
+        }
+
         return View(employee);
     }
 
@@ -86,7 +175,16 @@ public class EmployeesController : Controller
     [ActionName("Delete")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        await _employeeService.DeleteEmployeeAsync(id);
+        try
+        {
+            await _employeeService.DeleteEmployeeAsync(id);
+            TempData["SuccessMessage"] = "Nhân viên đã được xóa thành công!";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"Lỗi khi xóa: {ex.Message}";
+        }
+
         return RedirectToAction(nameof(Index));
     }
 }

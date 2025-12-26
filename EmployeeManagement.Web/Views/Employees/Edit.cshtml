@@ -12,7 +12,7 @@
         <div class="col-md-8">
             <form asp-action="Edit" method="post">
                 <input type="hidden" asp-for="Id" />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="All" class="text-danger"></div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -55,12 +55,14 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label asp-for="Salary" class="form-label">Lương</label>
-                        <input asp-for="Salary" type="number" step="1000" class="form-control" />
+                        <input asp-for="Salary" type="number" step="1000" min="0" class="form-control" />
                         <span asp-validation-for="Salary" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="HireDate" class="form-label">Ngày vào làm</label>
-                        <input asp-for="HireDate" type="date" class="form-control" />
+                        <input asp-for="HireDate" type="date" 
+                               value="@(Model.HireDate != default(DateTime) ? Model.HireDate.ToLocalTime().ToString("yyyy-MM-dd") : "")" 
+                               class="form-control" />
                         <span asp-validation-for="HireDate" class="text-danger"></span>
                     </div>
                 </div>

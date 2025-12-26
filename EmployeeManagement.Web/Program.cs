@@ -3,16 +3,23 @@ using EmployeeManagement.Core.Interfaces;
 using EmployeeManagement.Core.Services;
 using EmployeeManagement.Infrastructure.Data;
 using EmployeeManagement.Infrastructure.Repositories;
-using EmployeeManagement.Core.Entities;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Database - Dùng In-Memory cho development (giống API)
+// Database - PostgreSQL (dùng chung với API)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("EmployeeManagementDb"));
+    options.UseNpgsql(connectionString));
 
 // Repositories
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -22,52 +29,33 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 var app = builder.Build();
 
-// Seed data mẫu (giống API)
+// Test database connection
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     
-    if (!context.Employees.Any())
+    try
     {
-        context.Employees.AddRange(
-            new Employee
-            {
-                FirstName = "Nguyễn",
-                LastName = "Văn A",
-                Email = "nguyenvana@example.com",
-                PhoneNumber = "0123456789",
-                Department = "IT",
-                Position = "Developer",
-                Salary = 15000000,
-                HireDate = DateTime.Now.AddYears(-2),
-                CreatedAt = DateTime.UtcNow
-            },
-            new Employee
-            {
-                FirstName = "Trần",
-                LastName = "Thị B",
-                Email = "tranthib@example.com",
-                PhoneNumber = "0987654321",
-                Department = "HR",
-                Position = "Manager",
-                Salary = 20000000,
-                HireDate = DateTime.Now.AddYears(-1),
-                CreatedAt = DateTime.UtcNow
-            },
-            new Employee
-            {
-                FirstName = "Lê",
-                LastName = "Văn C",
-                Email = "levanc@example.com",
-                PhoneNumber = "0912345678",
-                Department = "Finance",
-                Position = "Accountant",
-                Salary = 12000000,
-                HireDate = DateTime.Now.AddMonths(-6),
-                CreatedAt = DateTime.UtcNow
-            }
-        );
-        context.SaveChanges();
+        // Kiểm tra kết nối database
+        if (!context.Database.CanConnect())
+        {
+            throw new Exception("Cannot connect to PostgreSQL database. Please check your connection string.");
+        }
+        Console.WriteLine("✅ Database connection successful!");
+    }
+    catch (NpgsqlException ex)
+    {
+        Console.WriteLine($"❌ PostgreSQL Error: {ex.Message}");
+        Console.WriteLine($"Error Code: {ex.SqlState}");
+        Console.WriteLine("\n💡 Please check:");
+        Console.WriteLine("1. PostgreSQL service is running");
+        Console.WriteLine("2. Connection string in appsettings.json is correct");
+        Console.WriteLine("3. Database 'EmployeeManagementDb' exists");
+        // Không throw để app vẫn chạy, nhưng sẽ lỗi khi truy cập Employees
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error: {ex.Message}");
     }
 }
 
@@ -76,6 +64,11 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+}
+else
+{
+    // Trong Development, hiển thị chi tiết lỗi
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();

@@ -74,3 +74,5 @@ C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Web\obj\Deb
 C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Web\obj\Debug\net8.0\EmployeeManagement.Web.pdb
 C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Web\obj\Debug\net8.0\EmployeeManagement.Web.genruntimeconfig.cache
 C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Web\obj\Debug\net8.0\ref\EmployeeManagement.Web.dll
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Web\bin\Debug\net8.0\Npgsql.dll
+C:\Users\RedNV\Desktop\Project\EmployeeManagement\EmployeeManagement.Web\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
