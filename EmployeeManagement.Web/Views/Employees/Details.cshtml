@@ -1,0 +1,59 @@
+@model EmployeeManagement.Core.Entities.Employee
+
+@{
+    ViewData["Title"] = "Chi tiết nhân viên";
+}
+
+<div class="container mt-4">
+    <h2>Chi tiết nhân viên</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">ID:</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+
+        <dt class="col-sm-3">Họ:</dt>
+        <dd class="col-sm-9">@Model.FirstName</dd>
+
+        <dt class="col-sm-3">Tên:</dt>
+        <dd class="col-sm-9">@Model.LastName</dd>
+
+        <dt class="col-sm-3">Họ và tên:</dt>
+        <dd class="col-sm-9"><strong>@Model.FirstName @Model.LastName</strong></dd>
+
+        <dt class="col-sm-3">Email:</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Số điện thoại:</dt>
+        <dd class="col-sm-9">@Model.PhoneNumber</dd>
+
+        <dt class="col-sm-3">Phòng ban:</dt>
+        <dd class="col-sm-9">@Model.Department</dd>
+
+        <dt class="col-sm-3">Chức vụ:</dt>
+        <dd class="col-sm-9">@Model.Position</dd>
+
+        <dt class="col-sm-3">Lương:</dt>
+        <dd class="col-sm-9">@Model.Salary.ToString("N0") VNĐ</dd>
+
+        <dt class="col-sm-3">Ngày vào làm:</dt>
+        <dd class="col-sm-9">@Model.HireDate.ToString("dd/MM/yyyy")</dd>
+
+        @if (Model.CreatedAt.HasValue)
+        {
+            <dt class="col-sm-3">Ngày tạo:</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm")</dd>
+        }
+
+        @if (Model.UpdatedAt.HasValue)
+        {
+            <dt class="col-sm-3">Ngày cập nhật:</dt>
+            <dd class="col-sm-9">@Model.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")</dd>
+        }
+    </dl>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+    </div>
+</div>
