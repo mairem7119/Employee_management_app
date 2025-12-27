@@ -16,7 +16,7 @@ public class EmployeeRepository : IEmployeeRepository
 
   public async Task<IEnumerable<Employee>> GetAllAsync()
   {
-    return await _context.Employees.ToListAsync();
+    return await _context.Employees.AsNoTracking().ToListAsync();
   }
 
   public async Task<Employee?> GetByIdAsync(int id)
