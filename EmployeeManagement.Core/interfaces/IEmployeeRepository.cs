@@ -4,8 +4,8 @@ namespace EmployeeManagement.Core.Interfaces;
 
 public interface IEmployeeRepository
 {
-  Task<IEnumerable<Employee>> GetAllAsync();  // Sửa từ GetAllEmployees
-  Task<Employee?> GetByIdAsync(int id);  // Sửa từ GetByIDAsync và thêm ?
+  Task<IEnumerable<Employee>> GetAllAsync(); 
+  Task<Employee?> GetByIdAsync(int id);  
   Task<Employee> AddAsync(Employee employee);
   Task<Employee> UpdateAsync(Employee employee);
   Task<bool> DeleteAsync(int id);
