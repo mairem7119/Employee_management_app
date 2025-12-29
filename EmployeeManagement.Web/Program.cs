@@ -23,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Repositories
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); 
 // Services
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 

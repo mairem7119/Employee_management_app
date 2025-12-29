@@ -23,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Repositories
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); 
 // Services
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
@@ -101,46 +101,47 @@ using (var scope = app.Services.CreateScope())
             if (!context.Employees.Any())
             {
                 Console.WriteLine("🌱 Seeding initial data...");
-                context.Employees.AddRange(
-                    new Employee
-                    {
-                        FirstName = "Nguyễn",
-                        LastName = "Văn A",
-                        Email = "nguyenvana@example.com",
-                        PhoneNumber = "0123456789",
-                        Department = "IT",
-                        Position = "Developer",
-                        Salary = 15000000,
-                        HireDate = DateTime.Now.AddYears(-2),
-                        CreatedAt = DateTime.UtcNow
-                    },
-                    new Employee
-                    {
-                        FirstName = "Trần",
-                        LastName = "Thị B",
-                        Email = "tranthib@example.com",
-                        PhoneNumber = "0987654321",
-                        Department = "HR",
-                        Position = "Manager",
-                        Salary = 20000000,
-                        HireDate = DateTime.Now.AddYears(-1),
-                        CreatedAt = DateTime.UtcNow
-                    },
-                    new Employee
-                    {
-                        FirstName = "Lê",
-                        LastName = "Văn C",
-                        Email = "levanc@example.com",
-                        PhoneNumber = "0912345678",
-                        Department = "Finance",
-                        Position = "Accountant",
-                        Salary = 12000000,
-                        HireDate = DateTime.Now.AddMonths(-6),
-                        CreatedAt = DateTime.UtcNow
-                    }
-                );
-                context.SaveChanges();
-                Console.WriteLine("✅ Seed data đã được thêm vào database!");
+                Console.WriteLine("ℹ️  Seed data skipped. Please add employees via Web UI.");
+                // context.Employees.AddRange(
+                //     new Employee
+                //     {
+                //         FirstName = "Nguyễn",
+                //         LastName = "Văn A",
+                //         Email = "nguyenvana@example.com",
+                //         PhoneNumber = "0123456789",
+                //         Department = "IT",
+                //         Position = "Developer",
+                //         Salary = 15000000,
+                //         HireDate = DateTime.Now.AddYears(-2),
+                //         CreatedAt = DateTime.UtcNow
+                //     },
+                //     new Employee
+                //     {
+                //         FirstName = "Trần",
+                //         LastName = "Thị B",
+                //         Email = "tranthib@example.com",
+                //         PhoneNumber = "0987654321",
+                //         Department = "HR",
+                //         Position = "Manager",
+                //         Salary = 20000000,
+                //         HireDate = DateTime.Now.AddYears(-1),
+                //         CreatedAt = DateTime.UtcNow
+                //     },
+                //     new Employee
+                //     {
+                //         FirstName = "Lê",
+                //         LastName = "Văn C",
+                //         Email = "levanc@example.com",
+                //         PhoneNumber = "0912345678",
+                //         Department = "Finance",
+                //         Position = "Accountant",
+                //         Salary = 12000000,
+                //         HireDate = DateTime.Now.AddMonths(-6),
+                //         CreatedAt = DateTime.UtcNow
+                //     }
+                // );
+                // context.SaveChanges();
+                // Console.WriteLine("✅ Seed data đã được thêm vào database!");
             }
             else
             {
@@ -150,7 +151,6 @@ using (var scope = app.Services.CreateScope())
         catch (Exception seedEx)
         {
             Console.WriteLine($"⚠️  Seed data warning: {seedEx.Message}");
-            // Không throw, tiếp tục chạy app
         }
     }
     catch (NpgsqlException ex)

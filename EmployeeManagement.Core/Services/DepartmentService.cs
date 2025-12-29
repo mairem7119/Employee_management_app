@@ -53,4 +53,9 @@ public class DepartmentService : IDepartmentService
       return false;
     return await _departmentRepository.DeleteAsync(id);
   }
+
+  public async Task<bool> ExistsAsync(int id)
+  {
+    return await _departmentRepository.ExistsAsync(id);
+  }
 }

@@ -14,12 +14,12 @@ public class EmployeeService : IEmployeeService
 
   public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
   {
-    return await _employeeRepository.GetAllAsync();  // Sửa tên method
+    return await _employeeRepository.GetAllAsync();  
   }
 
-  public async Task<Employee?> GetEmployeeByIdAsync(int id)  // Thêm ?
+  public async Task<Employee?> GetEmployeeByIdAsync(int id) 
   {
-    return await _employeeRepository.GetByIdAsync(id);  // Sửa tên method
+    return await _employeeRepository.GetByIdAsync(id);  
   }
 
   public async Task<Employee> CreateEmployeeAsync(Employee employee)
@@ -27,18 +27,18 @@ public class EmployeeService : IEmployeeService
     return await _employeeRepository.AddAsync(employee);
   }
 
-  public async Task<Employee?> UpdateEmployeeAsync(int id, Employee employee)  // Thêm ?
+  public async Task<Employee?> UpdateEmployeeAsync(int id, Employee employee)  
   {
-    var existingEmployee = await _employeeRepository.GetByIdAsync(id);  // Sửa tên method
+    var existingEmployee = await _employeeRepository.GetByIdAsync(id);  
 
     if(existingEmployee == null) 
-      return null;  // Sửa từ throw exception thành return null
+      return null;  
 
     existingEmployee.FirstName = employee.FirstName;
     existingEmployee.LastName = employee.LastName;
     existingEmployee.Email = employee.Email;
     existingEmployee.PhoneNumber = employee.PhoneNumber;
-    existingEmployee.Department = employee.Department;
+    existingEmployee.DepartmentId = employee.DepartmentId;
     existingEmployee.Position = employee.Position;
     existingEmployee.Salary = employee.Salary;
     existingEmployee.HireDate = employee.HireDate;

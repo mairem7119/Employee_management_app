@@ -9,6 +9,8 @@ public class ApplicationDbContext : DbContext
   
   public DbSet<Employee> Employees { get; set; }
 
+  public DbSet<Department> Departments {get; set;}
+
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
@@ -28,17 +30,13 @@ public class ApplicationDbContext : DbContext
           .IsRequired()
           .HasMaxLength(200);
       
-      // THÊM IsRequired() cho PhoneNumber
       entity.Property(e => e.PhoneNumber)
           .IsRequired()
           .HasMaxLength(20);
       
-      // THÊM IsRequired() cho Department
-      entity.Property(e => e.Department)
-          .IsRequired()
-          .HasMaxLength(100);
+      entity.Property(e => e.DepartmentId)
+          .IsRequired();
       
-      // THÊM IsRequired() cho Position
       entity.Property(e => e.Position)
           .IsRequired()
           .HasMaxLength(100);
@@ -50,10 +48,47 @@ public class ApplicationDbContext : DbContext
       entity.Property(e => e.HireDate)
           .IsRequired();
       
-      // Tạo unique index cho Email
       entity.HasIndex(e => e.Email)
           .IsUnique()
           .HasDatabaseName("IX_Employees_Email");
+
+      entity.HasOne(e => e.Department)
+        .WithMany()
+        .HasForeignKey(e => e.DepartmentId)
+        .OnDelete(DeleteBehavior.Restrict);// Không cho xóa Department nếu có Employee
+    });
+
+    modelBuilder.Entity<Department>(entity => {
+        entity.HasKey(d => d.Id);
+
+        entity.Property(d => d.Code)
+            .IsRequired()
+            .HasMaxLength(10);
+
+        entity.Property(d => d.Name)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        entity.Property(d => d.Description)
+            .HasMaxLength(500);
+
+        entity.Property(d => d.IsActive)
+            .IsRequired()
+            .HasMaxLength(10);
+
+        entity.Property(d => d.CreatedAt)
+            .IsRequired();
+
+        entity.Property(d => d.UpdatedAt)
+            .IsRequired();
+
+        entity.HasIndex(d => d.Code)
+            .IsUnique()
+            .HasDatabaseName("IX_Departments_Code");
+
+        entity.HasIndex(d => d.Name)
+            .IsUnique()
+            .HasDatabaseName("IX_Departments_Name");
     });
   }
 }

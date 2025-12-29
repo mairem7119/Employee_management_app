@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using EmployeeManagement.Core.Entities;
 using EmployeeManagement.Core.Services;
+using EmployeeManagement.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Web.Controllers;
@@ -8,10 +9,12 @@ namespace EmployeeManagement.Web.Controllers;
 public class EmployeesController : Controller
 {
     private readonly IEmployeeService _employeeService;
+    private readonly IDepartmentRepository _departmentRepository;
 
-    public EmployeesController(IEmployeeService employeeService)
-    {
+    public EmployeesController(IEmployeeService employeeService, IDepartmentRepository departmentRepository)
+    {   
         _employeeService = employeeService;
+        _departmentRepository = departmentRepository;
     }
 
     public async Task<IActionResult> Index()
@@ -29,8 +32,9 @@ public class EmployeesController : Controller
         return View(employee);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        ViewBag.Departments = await _departmentRepository.GetAllAsync();
         return View();
     }
 
@@ -96,6 +100,7 @@ public class EmployeesController : Controller
             Console.WriteLine($"Exception: {ex.Message}");
         }
 
+        ViewBag.Departments = await _departmentRepository.GetAllAsync();
         return View(employee);
     }
 
@@ -105,6 +110,7 @@ public class EmployeesController : Controller
         if (employee == null)
             return NotFound();
 
+        ViewBag.Departments = await _departmentRepository.GetAllAsync();
         return View(employee);
     }
 
@@ -158,6 +164,7 @@ public class EmployeesController : Controller
             ModelState.AddModelError("", $"Lỗi: {ex.Message}");
         }
 
+        ViewBag.Departments = await _departmentRepository.GetAllAsync();
         return View(employee);
     }
 

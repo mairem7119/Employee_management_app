@@ -41,9 +41,18 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label asp-for="Department" class="form-label">Phòng ban</label>
-                        <input asp-for="Department" class="form-control" />
-                        <span asp-validation-for="Department" class="text-danger"></span>
+                        <label asp-for="DepartmentId" class="form-label">Phòng ban <span class="text-danger">*</span></label>
+                        <select asp-for="DepartmentId" class="form-select" required>
+                            <option value="">-- Chọn phòng ban --</option>
+                            @if (ViewBag.Departments != null)
+                            {
+                                @foreach (var dept in (IEnumerable<EmployeeManagement.Core.Entities.Department>)ViewBag.Departments)
+                                {
+                                    <option value="@dept.Id">@dept.Name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="DepartmentId" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Position" class="form-label">Chức vụ</label>

@@ -16,12 +16,17 @@ public class EmployeeRepository : IEmployeeRepository
 
   public async Task<IEnumerable<Employee>> GetAllAsync()
   {
-    return await _context.Employees.AsNoTracking().ToListAsync();
+    return await _context.Employees
+    .Include(e => e.Department)
+    .AsNoTracking()
+    .ToListAsync();
   }
 
   public async Task<Employee?> GetByIdAsync(int id)
   {
-    return await _context.Employees.FindAsync(id);
+    return await _context.Employees
+    .Include(e => e.Department)
+    .FirstOrDefaultAsync(e => e.Id == id);
   }
 
   public async Task<Employee> AddAsync(Employee employee)
@@ -65,7 +70,7 @@ public class EmployeeRepository : IEmployeeRepository
     existingEmployee.LastName = employee.LastName;
     existingEmployee.Email = employee.Email;
     existingEmployee.PhoneNumber = employee.PhoneNumber;
-    existingEmployee.Department = employee.Department;
+    existingEmployee.DepartmentId = employee.DepartmentId;
     existingEmployee.Position = employee.Position;
     existingEmployee.Salary = employee.Salary;
     
