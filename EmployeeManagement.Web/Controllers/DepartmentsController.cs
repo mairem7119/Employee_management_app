@@ -22,4 +22,13 @@ public class DepartmentsController : Controller
     var departments = await _departmentService.GetAllDepartmentsAsync();
     return View(departments);
   }
+
+  public async Task<IActionResult> Details(int id)
+  {
+    var department = await _departmentService.GetDepartmentByIdAsync(id);
+    if (department == null)
+      return NotFound();
+
+    return View(department);
+  }
 }

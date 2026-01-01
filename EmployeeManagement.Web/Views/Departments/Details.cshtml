@@ -1,0 +1,38 @@
+@model EmployeeManagement.Core.Entities.Department
+
+@{
+    ViewData["Title"] = "Chi tiết phòng ban";
+}
+
+<div class="container mt-4">
+    <h2>Chi tiết phòng ban</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">ID:</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+
+        <dt class="col-sm-3">Mã phòng ban:</dt>
+        <dd class="col-sm-9">@Model.Code</dd>
+
+        <dt class="col-sm-3">Tên phòng ban:</dt>
+        <dd class="col-sm-9">@Model.Name</dd>
+
+        <dt class="col-sm-3">Mô tả:</dt>
+        <dd class="col-sm-9">@Model.Description</dd>
+
+        <dt class="col-sm-3">Trạng thái:</dt>
+        <dd class="col-sm-9">@Model.IsActive</dd>
+
+        <dt class="col-sm-3">Ngày tạo:</dt>
+        <dd class="col-sm-9">@Model.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-3">Ngày cập nhật:</dt>
+        <dd class="col-sm-9">@Model.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+    </dl>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+    </div>
+</div>
