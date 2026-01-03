@@ -1,0 +1,56 @@
+@model EmployeeManagement.Core.Entities.Department
+
+@{
+    ViewData["Title"] = "Xóa phòng ban";
+}
+
+<div class="container mt-4">
+    <h2 class="text-danger">Xóa phòng ban</h2>
+    <hr />
+    
+    @if (ViewBag.HasEmployees == true)
+    {
+        <div class="alert alert-warning" role="alert">
+            <h5><i class="bi bi-exclamation-triangle"></i> Cảnh báo!</h5>
+            <p>Phòng ban này hiện có <strong>@ViewBag.EmployeeCount</strong> nhân viên. Bạn không thể xóa phòng ban khi còn nhân viên.</p>
+            <p>Vui lòng chuyển tất cả nhân viên sang phòng ban khác trước khi xóa.</p>
+        </div>
+    }
+    else
+    {
+        <h4>Bạn có chắc chắn muốn xóa phòng ban này?</h4>
+    }
+
+    <dl class="row mt-4">
+        <dt class="col-sm-3">ID:</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+
+        <dt class="col-sm-3">Mã phòng ban:</dt>
+        <dd class="col-sm-9"><strong>@Model.Code</strong></dd>
+
+        <dt class="col-sm-3">Tên phòng ban:</dt>
+        <dd class="col-sm-9"><strong>@Model.Name</strong></dd>
+
+        <dt class="col-sm-3">Mô tả:</dt>
+        <dd class="col-sm-9">@(Model.Description ?? "N/A")</dd>
+
+        <dt class="col-sm-3">Trạng thái:</dt>
+        <dd class="col-sm-9">@(Model.IsActive == "true" ? "Hoạt động" : "Không hoạt động")</dd>
+
+        <dt class="col-sm-3">Ngày tạo:</dt>
+        <dd class="col-sm-9">@Model.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-3">Ngày cập nhật:</dt>
+        <dd class="col-sm-9">@Model.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+        @if (ViewBag.HasEmployees != true)
+        {
+            <button type="submit" class="btn btn-danger">Xóa</button>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+
