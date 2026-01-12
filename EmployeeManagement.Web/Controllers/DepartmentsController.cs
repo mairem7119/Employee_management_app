@@ -46,7 +46,7 @@ public class DepartmentsController : Controller
       if (ModelState.IsValid)
       {
         await _departmentService.CreateDepartmentAsync(department);
-        TempData["SuccessMessage"] = "Phòng ban đã được thêm thành công!";
+        TempData["SuccessMessage"] = "Phòng ban đã được thêm thành công Rồi!";
         return RedirectToAction(nameof(Index));
       }
     }
