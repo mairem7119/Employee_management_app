@@ -11,6 +11,8 @@ public class ApplicationDbContext : DbContext
 
   public DbSet<Department> Departments {get; set;}
 
+  public DbSet<Position> Positions { get; set; }
+
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
@@ -89,6 +91,19 @@ public class ApplicationDbContext : DbContext
         entity.HasIndex(d => d.Name)
             .IsUnique()
             .HasDatabaseName("IX_Departments_Name");
+    });
+
+    modelBuilder.Entity<Position>(entity => {
+      entity.HasKey(p => p.Id);
+      entity.Property(p => p.Name)
+          .IsRequired()
+          .HasMaxLength(100);
+      entity.Property(p => p.Description)
+          .HasMaxLength(500);
+      entity.Property(p => p.CreatedAt)
+          .IsRequired();
+      entity.Property(p => p.UpdatedAt)
+          .IsRequired();
     });
   }
 }
