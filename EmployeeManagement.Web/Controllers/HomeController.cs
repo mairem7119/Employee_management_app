@@ -1,13 +1,28 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using EmployeeManagement.Web.Models;
+using EmployeeManagement.Core.Services;
 
 namespace EmployeeManagement.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly IEmployeeService _employeeService;
+    private readonly IDepartmentService _departmentService;
+
+    public HomeController(IEmployeeService employeeService, IDepartmentService departmentService)
     {
+        _employeeService = employeeService;
+        _departmentService = departmentService;
+    } 
+    public async Task<IActionResult> Index()
+    {
+        var employees = await _employeeService.GetAllEmployeesAsync();
+        var departments = await _departmentService.GetAllDepartmentsAsync();
+
+        ViewBag.TotalEmployees = employees.Count();
+        ViewBag.TotalDepartments = departments.Count();
+
         return View();
     }
 
