@@ -20,10 +20,13 @@ public class HomeController : Controller
         var employees = await _employeeService.GetAllEmployeesAsync();
         var departments = await _departmentService.GetAllDepartmentsAsync();
 
-        ViewBag.TotalEmployees = employees.Count();
-        ViewBag.TotalDepartments = departments.Count();
+       var viewModel = new HomeViewModel
+       {
+        TotalEmployees = employees.Count(),
+        TotalDepartments = departments.Count(),
+       };
 
-        return View();
+        return View(viewModel);
     }
 
     public IActionResult Privacy()
