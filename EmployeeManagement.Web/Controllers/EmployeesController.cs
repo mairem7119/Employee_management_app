@@ -10,11 +10,13 @@ public class EmployeesController : Controller
 {
     private readonly IEmployeeService _employeeService;
     private readonly IDepartmentRepository _departmentRepository;
+    private readonly IPositionRepository  _positionRepository;
 
-    public EmployeesController(IEmployeeService employeeService, IDepartmentRepository departmentRepository)
+    public EmployeesController(IEmployeeService employeeService, IDepartmentRepository departmentRepository, IPositionRepository positionRepository)
     {   
         _employeeService = employeeService;
         _departmentRepository = departmentRepository;
+        _positionRepository = positionRepository;
     }
 
     public async Task<IActionResult> Index()
@@ -111,6 +113,7 @@ public class EmployeesController : Controller
             return NotFound();
 
         ViewBag.Departments = await _departmentRepository.GetAllAsync();
+        ViewBag.Positions = await _positionRepository.GetAllAsync();
         return View(employee);
     }
 
@@ -165,6 +168,7 @@ public class EmployeesController : Controller
         }
 
         ViewBag.Departments = await _departmentRepository.GetAllAsync();
+        ViewBag.Positions = await _positionRepository.GetAllAsync();    
         return View(employee);
     }
 

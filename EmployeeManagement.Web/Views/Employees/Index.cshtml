@@ -53,7 +53,7 @@
                             <td>@employee.Email</td>
                             <td>@employee.PhoneNumber</td>
                             <td>@(employee.Department != null ? employee.Department.Name : "N/A")</td>
-                            <td>@employee.Position</td>
+                            <td>@(employee.Position == "1"? "Leader": employee.Position == "2"? "Junior": employee.Position == "3"? "Manager": employee.Position == "4"? "Senior" :"N/A")</td>
                             <td>@employee.Salary.ToString("N0") VNĐ</td>
                             <td>@employee.HireDate.ToLocalTime().ToString("dd/MM/yyyy")</td>
                             <td>
