@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using EmployeeManagement.Core.Entities;
 using EmployeeManagement.Core.Services;
 using EmployeeManagement.Core.Interfaces;
+using EmployeeManagement.Web.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Web.Controllers;
@@ -112,22 +113,43 @@ public class EmployeesController : Controller
         if (employee == null)
             return NotFound();
 
-        ViewBag.Departments = await _departmentRepository.GetAllAsync();
-        ViewBag.Positions = await _positionRepository.GetAllAsync();
-        return View(employee);
+        var departments = await _departmentRepository.GetAllAsync();
+        var positions = await _positionRepository.GetAllAsync();
+
+        var viewModel = new EditEmployeeViewModel
+        {
+            Employee = employee,
+            Departments = departments ?? new List<Department>(),
+            Positions = positions ?? new List<Position>()
+        };
+
+        return View(viewModel);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Employee employee)
+    public async Task<IActionResult> Edit(int id, EditEmployeeViewModel viewModel)
     {
-        if (id != employee.Id)
+        if (viewModel == null || viewModel.Employee == null)
+        {
+            ModelState.AddModelError("", "Dữ liệu không hợp lệ.");
+            viewModel = new EditEmployeeViewModel
+            {
+                Employee = new Employee(),
+                Departments = await _departmentRepository.GetAllAsync() ?? new List<Department>(),
+                Positions = await _positionRepository.GetAllAsync() ?? new List<Position>()
+            };
+            return View(viewModel);
+        }
+
+        if (id != viewModel.Employee.Id)
             return NotFound();
 
         try
         {
             if (ModelState.IsValid)
             {
+                var employee = viewModel.Employee;
                 // Convert HireDate sang UTC nếu cần
                 if (employee.HireDate.Kind != DateTimeKind.Utc)
                 {
@@ -150,12 +172,12 @@ public class EmployeesController : Controller
             if (errorMessage.Contains("IX_Employees_Email") || 
                 errorMessage.Contains("duplicate key value"))
             {
-                ModelState.AddModelError("Email", "Email này đã tồn tại. Vui lòng sử dụng email khác.");
+                ModelState.AddModelError("Employee.Email", "Email này đã tồn tại. Vui lòng sử dụng email khác.");
             }
             else if (errorMessage.Contains("timestamp with time zone") || 
                     errorMessage.Contains("DateTime with Kind"))
             {
-                ModelState.AddModelError("HireDate", "Lỗi xử lý ngày tháng. Vui lòng thử lại.");
+                ModelState.AddModelError("Employee.HireDate", "Lỗi xử lý ngày tháng. Vui lòng thử lại.");
             }
             else
             {
@@ -167,9 +189,14 @@ public class EmployeesController : Controller
             ModelState.AddModelError("", $"Lỗi: {ex.Message}");
         }
 
-        ViewBag.Departments = await _departmentRepository.GetAllAsync();
-        ViewBag.Positions = await _positionRepository.GetAllAsync();    
-        return View(employee);
+        // Load lại dữ liệu cho ViewModel khi có lỗi
+        var departments = await _departmentRepository.GetAllAsync();
+        var positions = await _positionRepository.GetAllAsync();
+        
+        viewModel.Departments = departments ?? new List<Department>();
+        viewModel.Positions = positions ?? new List<Position>();
+        
+        return View(viewModel);
     }
 
     public async Task<IActionResult> Delete(int id)
