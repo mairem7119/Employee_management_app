@@ -79,8 +79,8 @@
                     <div class="col-md-6">
                         <label asp-for="HireDate" class="form-label">Ngày vào làm</label>
                         <input asp-for="HireDate" type="date" 
-                               value="@(Model.HireDate != default(DateTime) ? Model.HireDate.ToLocalTime().ToString("yyyy-MM-dd") : "")" 
-                               class="form-control" />
+                            value="@(Model.HireDate != default(DateTime) ? Model.HireDate.ToLocalTime().ToString("yyyy-MM-dd") : "")" 
+                            class="form-control" />
                         <span asp-validation-for="HireDate" class="text-danger"></span>
                     </div>
                 </div>
