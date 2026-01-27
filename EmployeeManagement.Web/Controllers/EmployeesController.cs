@@ -20,9 +20,31 @@ public class EmployeesController : Controller
         _positionRepository = positionRepository;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? searchTerm, int? departmentId, string? position)
     {
-        var employees = await _employeeService.GetAllEmployeesAsync();
+        // Load danh sách phòng ban và chức vụ cho dropdown
+        ViewBag.Departments = await _departmentRepository.GetAllAsync();
+        ViewBag.Positions = await _positionRepository.GetAllAsync();
+        
+        // Lưu các giá trị filter vào ViewBag để giữ lại khi submit form
+        ViewBag.SearchTerm = searchTerm;
+        ViewBag.SelectedDepartmentId = departmentId;
+        ViewBag.SelectedPosition = position;
+
+        IEnumerable<Employee> employees;
+
+        // Nếu có tham số tìm kiếm/lọc thì gọi SearchEmployeesAsync, ngược lại lấy tất cả
+        if (!string.IsNullOrWhiteSpace(searchTerm) || 
+            (departmentId.HasValue && departmentId.Value > 0) || 
+            !string.IsNullOrWhiteSpace(position))
+        {
+            employees = await _employeeService.SearchEmployeesAsync(searchTerm, departmentId, position);
+        }
+        else
+        {
+            employees = await _employeeService.GetAllEmployeesAsync();
+        }
+
         return View(employees);
     }
 

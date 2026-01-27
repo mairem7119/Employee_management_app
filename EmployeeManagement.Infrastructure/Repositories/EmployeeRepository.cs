@@ -120,4 +120,38 @@ public class EmployeeRepository : IEmployeeRepository
   {
     return await _context.Employees.AnyAsync(e => e.Id == id);
   }
+
+  public async Task<IEnumerable<Employee>> SearchAsync(string? searchTerm, int? departmentId, string? position)
+  {
+    var query = _context.Employees.Include(e => e.Department).AsQueryable();
+
+    // Tìm kiếm theo từ khóa (tên, email, số điện thoại)
+    if (!string.IsNullOrWhiteSpace(searchTerm))
+    {
+      searchTerm = searchTerm.Trim();
+      query = query.Where(e => 
+        e.FirstName.Contains(searchTerm) ||
+        e.LastName.Contains(searchTerm) ||
+        e.Email.Contains(searchTerm) ||
+        e.PhoneNumber.Contains(searchTerm));
+    }
+
+    // Lọc theo phòng ban
+    if (departmentId.HasValue && departmentId.Value > 0)
+    {
+      query = query.Where(e => e.DepartmentId == departmentId.Value);
+    }
+
+    // Lọc theo chức vụ
+    if (!string.IsNullOrWhiteSpace(position))
+    {
+      query = query.Where(e => e.Position.Contains(position));
+    }
+
+    return await query
+      .AsNoTracking()
+      .OrderBy(e => e.FirstName)
+      .ThenBy(e => e.LastName)
+      .ToListAsync();
+  }
 }

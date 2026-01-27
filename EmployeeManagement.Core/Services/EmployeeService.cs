@@ -55,4 +55,9 @@ public class EmployeeService : IEmployeeService
 
     return await _employeeRepository.DeleteAsync(id);
   }
+
+  public async Task<IEnumerable<Employee>> SearchEmployeesAsync(string? searchTerm, int? departmentId, string? position)
+  {
+    return await _employeeRepository.SearchAsync(searchTerm, departmentId, position);
+  }
 }

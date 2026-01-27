@@ -10,4 +10,5 @@ public interface IEmployeeRepository
   Task<Employee> UpdateAsync(Employee employee);
   Task<bool> DeleteAsync(int id);
   Task<bool> ExistsAsync(int id);
+  Task<IEnumerable<Employee>> SearchAsync(string? searchTerm, int? departmentId, string? position);
 }
