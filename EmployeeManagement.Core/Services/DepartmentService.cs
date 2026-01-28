@@ -58,4 +58,9 @@ public class DepartmentService : IDepartmentService
   {
     return await _departmentRepository.ExistsAsync(id);
   }
+
+  public async Task<IEnumerable<Department>> SearchDepartmentAsync(string? searchTerm)
+  {
+    return await _departmentRepository.SearchAsync(searchTerm);
+  }
 }

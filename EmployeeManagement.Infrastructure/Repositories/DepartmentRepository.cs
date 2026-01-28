@@ -73,4 +73,17 @@ public class DepartmentRepository : IDepartmentRepository
   {
     return await _context.Departments.AnyAsync(d => d.Id == id);
   }
+
+  public async Task<IEnumerable<Department>> SearchAsync(string? searchTerm)
+  {
+    var query = _context.Departments.AsQueryable();
+
+    if(!string.IsNullOrWhiteSpace(searchTerm))
+    {
+      searchTerm = searchTerm.Trim();
+      query = query.Where(d => d.Name.Contains(searchTerm) || d.Code.Contains(searchTerm));
+    }
+
+    return await query.AsNoTracking().OrderBy(d => d.Name).ToListAsync();
+  }
 }

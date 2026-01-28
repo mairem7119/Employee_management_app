@@ -17,9 +17,21 @@ public class DepartmentsController : Controller
     _employeeRepository = employeeRepository;
   }
 
-  public async Task<IActionResult> Index()
+  public async Task<IActionResult> Index(string? searchTerm)
   {
-    var departments = await _departmentService.GetAllDepartmentsAsync();
+    IEnumerable<Department> departments;
+
+    ViewBag.SearchTerm = searchTerm;
+
+    if(!string.IsNullOrWhiteSpace(searchTerm))
+    {
+      departments = await _departmentService.SearchDepartmentAsync(searchTerm);
+    }
+    else
+    {
+      departments = await _departmentService.GetAllDepartmentsAsync();
+    }
+    
     return View(departments);
   }
 
