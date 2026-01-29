@@ -11,4 +11,5 @@ public interface IDepartmentRepository
   Task<Department> UpdateAsync(Department department);
   Task<bool> DeleteAsync(int id);
   Task<bool> ExistsAsync(int id);
+  Task<IEnumerable<Department>> SearchAsync(string? searchTerm);
 }

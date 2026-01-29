@@ -59,8 +59,14 @@ public class EmployeesController : Controller
 
     public async Task<IActionResult> Create()
     {
-        ViewBag.Departments = await _departmentRepository.GetAllAsync();
-        return View();
+
+        var viewModel = new CreateEmployeeViewModel
+        {
+            Departments = await _departmentRepository.GetAllAsync() ?? new List<Department>(),
+            Positions = await _positionRepository.GetAllAsync() ?? new List<Position>(),
+        };
+
+        return View(viewModel);
     }
 
     [HttpPost]
@@ -125,8 +131,13 @@ public class EmployeesController : Controller
             Console.WriteLine($"Exception: {ex.Message}");
         }
 
-        ViewBag.Departments = await _departmentRepository.GetAllAsync();
-        return View(employee);
+        var viewModel = new CreateEmployeeViewModel
+        {
+            Departments = await _departmentRepository.GetAllAsync() ?? new List<Department>(),
+            Positions = await _positionRepository.GetAllAsync() ?? new List<Position>(),
+        };
+
+        return View(viewModel);
     }
 
     public async Task<IActionResult> Edit(int id)

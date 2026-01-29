@@ -11,5 +11,5 @@ public interface IDepartmentService
   Task<Department?> UpdateDepartmentAsync(int id, Department department);
   Task<bool> DeleteDepartmentAsync(int id);
   Task<bool> ExistsAsync(int id);
-  Task<IEnumerable<Department>> SearchAsync(string? searchTerm);
+  Task<IEnumerable<Department>> SearchDepartmentAsync(string? searchTerm);
 }
