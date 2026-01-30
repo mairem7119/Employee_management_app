@@ -15,9 +15,16 @@ public class PositionsController : Controller
     _positionService = positionService;
   }
 
-  public async Task<IActionResult> Index()
+  public async Task<IActionResult> Index(string? sortBy, string? sortOrder)
   {
-    var positions = await _positionService.GetAllPositionsAsync();
+    sortBy = string.IsNullOrWhiteSpace(sortBy) ? "Name" : sortBy.Trim();
+    sortOrder = string.IsNullOrWhiteSpace(sortOrder) ? "asc" : sortOrder.Trim();
+    if (sortOrder != "asc" && sortOrder != "desc") sortOrder = "asc";
+
+    ViewBag.SortBy = sortBy;
+    ViewBag.SortOrder = sortOrder;
+
+    var positions = await _positionService.GetAllPositionsAsync(sortBy, sortOrder);
     return View(positions);
   }
 

@@ -2,6 +2,14 @@
 
 @{
   ViewData["Title"] = "Danh sách chức vụ";
+  var sortBy = ViewBag.SortBy as string ?? "Name";
+  var sortOrder = ViewBag.SortOrder as string ?? "asc";
+  string NextSortOrder(string column) => sortBy == column && sortOrder == "asc" ? "desc" : "asc";
+  string SortIcon(string column)
+  {
+    if (sortBy != column) return "";
+    return sortOrder == "asc" ? " ↑" : " ↓";
+  }
 }
 
 <div class="container mt-4">
@@ -33,11 +41,27 @@
       <table class="table table-striped table-hover">
         <thead class="table-dark">
           <tr>
-            <th>Mã chức vụ</th>
-            <th>Tên chức vụ</th>
+            <th>
+              <a asp-action="Index" asp-route-sortBy="Id" asp-route-sortOrder="@NextSortOrder("Id")" class="text-white text-decoration-none">
+                Mã chức vụ@(SortIcon("Id"))
+              </a>
+            </th>
+            <th>
+              <a asp-action="Index" asp-route-sortBy="Name" asp-route-sortOrder="@NextSortOrder("Name")" class="text-white text-decoration-none">
+                Tên chức vụ@(SortIcon("Name"))
+              </a>
+            </th>
             <th>Mô tả</th>
-            <th>Ngày tạo</th>
-            <th>Ngày cập nhật</th>
+            <th>
+              <a asp-action="Index" asp-route-sortBy="CreatedAt" asp-route-sortOrder="@NextSortOrder("CreatedAt")" class="text-white text-decoration-none">
+                Ngày tạo@(SortIcon("CreatedAt"))
+              </a>
+            </th>
+            <th>
+              <a asp-action="Index" asp-route-sortBy="UpdatedAt" asp-route-sortOrder="@NextSortOrder("UpdatedAt")" class="text-white text-decoration-none">
+                Ngày cập nhật@(SortIcon("UpdatedAt"))
+              </a>
+            </th>
             <th>Hành động</th>
           </tr>
         </thead>
