@@ -5,6 +5,7 @@ namespace EmployeeManagement.Core.Services;
 public interface IEmployeeService
 {
   Task<IEnumerable<Employee>> GetAllEmployeesAsync();
+  Task<IEnumerable<Employee>> GetAllEmployeesAsync(string? sortBy, string? sortOrder);
   Task<Employee?> GetEmployeeByIdAsync(int id); 
   Task<Employee> CreateEmployeeAsync(Employee employee);
   Task<Employee?> UpdateEmployeeAsync(int id, Employee employee);  

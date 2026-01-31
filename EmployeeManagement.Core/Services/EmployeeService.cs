@@ -17,6 +17,24 @@ public class EmployeeService : IEmployeeService
     return await _employeeRepository.GetAllAsync();  
   }
 
+  public async Task<Ienumerable<Employee>> GetAllActiveAsync(string? sortBy, string? sortOrder)
+  {
+    var listEmployee = (await _employeeRepository.GetAllAsync()).AsEnumerable();
+    var orderAsc = string.IsNullOrEmpty(sortOrder) || sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase);
+    var by = (sortBy ?? "Id").Trim(); 
+    return by switch
+    {
+      "Id" => orderAsc ? listEmployee.OrderBy(e => e.Id) : listEmployee.OrderByDescending(e => e.Id),
+      "FirstName" => orderAsc ? listEmployee.OrderBy(e => e.FirstName) : listEmployee.OrderByDescending(e => e.FirstName),
+      "LastName" => orderAsc ? listEmployee.OrderBy(e => e.LastName) : listEmployee.OrderByDescending(e => e.LastName),
+      "Email" => orderAsc ? listEmployee.OrderBy(e => e.Email) : listEmployee.OrderByDescending(e => e.Email),
+      "PhoneNumber" => orderAsc ? listEmployee.OrderBy(e => e.PhoneNumber) : listEmployee.OrderByDescending(e => e.PhoneNumber),
+      "DepartmentId" => orderAsc ? listEmployee.OrderBy(e => e.DepartmentId) : listEmployee.OrderByDescending(e => e.DepartmentId),
+    }
+    _ => listEmployee.OrderBy(e => e.Id)
+    };
+  }
+
   public async Task<Employee?> GetEmployeeByIdAsync(int id) 
   {
     return await _employeeRepository.GetByIdAsync(id);  
